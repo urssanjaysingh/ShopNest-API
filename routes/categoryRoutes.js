@@ -16,7 +16,7 @@ const router = express.Router()
 //router
 //create-category
 router.post(
-    '/create-category',
+    '/create',
     requireSignIn,
     isAdmin,
     createCategoryController
@@ -24,7 +24,7 @@ router.post(
 
 //update-category
 router.put(
-    '/update-category/:id',
+    '/update/:id',
     requireSignIn,
     isAdmin,
     updateCategoryController
