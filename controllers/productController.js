@@ -56,7 +56,7 @@ export const createProductController = async (req, res) => {
 
                     // Transform the Cloudinary URL by appending transformation parameters
                     const cloudinaryBaseUrl = 'https://res.cloudinary.com/dewblf95z/image/upload/';
-                    const transformedImageUrl = `${cloudinaryBaseUrl}w_400,h_400,c_fill/${result.public_id}.${result.format}`;
+                    const transformedImageUrl = `${cloudinaryBaseUrl}w_640,h_640,c_fill/${result.public_id}.${result.format}`;
 
                     // Create a new product with the Cloudinary image URL
                     const newProduct = new Product({
@@ -75,17 +75,17 @@ export const createProductController = async (req, res) => {
 
                     await newProduct.save();
 
-                    res.status(201).json({
+                    res.status(201).send({
                         success: true,
                         message: 'Product Created Successfully',
                         product: newProduct,
                     });
                 } else {
-                    return res.status(400).json({ message: 'Product photo is required' });
+                    return res.status(400).send({ message: 'Product photo is required' });
                 }
             } catch (error) {
                 console.error('Error creating product:', error);
-                return res.status(500).json({
+                return res.status(500).send({
                     success: false,
                     error,
                     message: 'Internal server error'
@@ -94,7 +94,7 @@ export const createProductController = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        res.status(500).send({
             success: false,
             error,
             message: 'Error in creating product',
