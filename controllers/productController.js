@@ -261,31 +261,38 @@ export const updateProductController = async (req, res) => {
 
 export const productFiltersController = async (req, res) => {
     try {
-        const checked = req.body.checked || []; 
-        const radio = req.body.radio || [];     
+        const { checked, radio } = req.body;
+        let query = {};
 
-        let args = {};
-
-        if (checked.length > 0) {
-            args.category = checked;
+        if (checked && checked.length > 0) {
+            query.category = { $in: checked };
         }
 
-        if (radio.length === 2) { // Check if radio is an array with two values
-            args.price = { $gte: radio[0], $lte: radio[1] };
+        if (radio && radio.length === 2) {
+            query.price = { $gte: radio[0], $lte: radio[1] };
         }
 
-        const products = await productModel.find(args);
+        const products = await Product.find(query).exec();
 
-        res.status(200).send({
+        if (!products || products.length === 0) {
+            console.log('No products found');
+            res.status(200).json({
+                success: true,
+                products: [],
+            });
+            return;
+        }
+
+        res.status(200).json({
             success: true,
             products,
         });
     } catch (error) {
         console.log(error);
-        res.status(400).send({
+        res.status(400).json({
             success: false,
             message: 'Error while filtering products',
-            error,
+            error: error.message,
         });
     }
 };
