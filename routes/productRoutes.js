@@ -8,6 +8,7 @@ import {
     productCountController,
     productFiltersController,
     productListController,
+    searchProductController,
     updateProductController
 } from '../controllers/productController.js'
 
@@ -57,5 +58,8 @@ router.get('/product-count', productCountController)
 
 //product per page
 router.get('/product-list/:page', productListController)
+
+//search product
+router.get('/search/:keyword', searchProductController)
 
 export default router
