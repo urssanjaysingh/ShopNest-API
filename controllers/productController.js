@@ -275,9 +275,9 @@ export const productFiltersController = async (req, res) => {
         const products = await Product.find(query).exec();
 
         if (!products || products.length === 0) {
-            console.log('No products found');
             res.status(200).json({
                 success: true,
+                message: "No Products Found",
                 products: [],
             });
             return;
