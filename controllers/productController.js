@@ -296,3 +296,43 @@ export const productFiltersController = async (req, res) => {
         });
     }
 };
+
+export const productCountController = async (req, res) => {
+    try {
+        const total = await productModel.find({}).estimatedDocumentCount()
+        res.status(200).send({
+            success: true,
+            total
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({
+            message: 'Error in product count',
+            error,
+            success: false
+        })
+    }
+}
+
+export const productListController = async (req, res) => {
+    try {
+        const perPage = 6
+        const page = req.params.page ? req.params.page : 1
+        const products = await productModel
+            .find({})
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .sort({ createdAt: -1 })
+        res.status(200).send({
+            success: true,
+            products,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({
+            success: false,
+            message: 'error in per page controller',
+            error
+        })
+    }
+}
