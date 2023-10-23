@@ -8,6 +8,8 @@ import { dirname } from 'path';
 import dotenv from 'dotenv'
 import productModel from '../models/productModel.js';
 import categoryModel from "../models/categoryModel.js";
+import orderModel from '../models/orderModel.js';
+import braintree from 'braintree';
 
 dotenv.config()
 
@@ -15,6 +17,13 @@ dotenv.config()
 const __filename = fileURLToPath(import.meta.url);
 // Use dirname to get the directory name
 const __dirname = dirname(__filename);
+
+var gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: process.env.BRAINTREE_MERCHANT_ID,
+    publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+    privateKey: process.env.BRAINTREE_PRIVATE_KEY,
+});
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -396,3 +405,53 @@ export const productCategoryController = async (req, res) => {
         })
     }
 }
+
+export const braintreeTokenController = async (req, res) => {
+    try {
+        gateway.clientToken.generate({}, function (err, response) {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(response);
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+export const braintreePaymentController = async (req, res) => {
+    try {
+        const { cart, nonce } = req.body; // Assuming cart is an array
+        if (!Array.isArray(cart)) {
+            return res.status(400).json({ error: "Cart should be an array" });
+        }
+
+        let total = 0;
+        cart.forEach((item) => {
+            total += item.price;
+        });
+
+        let newTransaction = gateway.transaction.sale({
+            amount: total,
+            paymentMethodNonce: nonce,
+            options: {
+                submitForSettlement: true
+            }
+        },
+        function (error, result) {
+            if (result) {
+                const order = new orderModel({
+                    products: cart,
+                    payment: result,
+                    buyer: req.user._id
+                }).save()
+                res.json({ ok: true });
+            } else {
+                res.status(500).send(error);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
