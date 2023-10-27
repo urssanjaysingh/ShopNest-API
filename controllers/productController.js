@@ -326,7 +326,7 @@ export const productCountController = async (req, res) => {
 
 export const productListController = async (req, res) => {
     try {
-        const perPage = 6
+        const perPage = 9
         const page = req.params.page ? req.params.page : 1
         const products = await productModel
             .find({})
@@ -439,18 +439,18 @@ export const braintreePaymentController = async (req, res) => {
                 submitForSettlement: true
             }
         },
-        function (error, result) {
-            if (result) {
-                const order = new orderModel({
-                    products: cart,
-                    payment: result,
-                    buyer: req.user._id
-                }).save()
-                res.json({ ok: true });
-            } else {
-                res.status(500).send(error);
-            }
-        });
+            function (error, result) {
+                if (result) {
+                    const order = new orderModel({
+                        products: cart,
+                        payment: result,
+                        buyer: req.user._id
+                    }).save()
+                    res.json({ ok: true });
+                } else {
+                    res.status(500).send(error);
+                }
+            });
     } catch (error) {
         console.log(error);
     }
