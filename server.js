@@ -23,10 +23,10 @@ app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/category', categoryRoutes)
 app.use('/api/v1/product', productRoutes)
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', (req, res) => {
-    res.send('<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa; margin: 0; padding: 0;">' +
-        '<h1 style="color: #007bff; font-family: Arial, sans-serif; text-align: center; background-color: #ffffff; padding: 20px; border-radius: 8px; margin: 0;">Welcome to E-Commerce App</h1>' +
-        '</div>');
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3500;
