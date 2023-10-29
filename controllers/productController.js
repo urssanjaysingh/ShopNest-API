@@ -13,9 +13,7 @@ import braintree from 'braintree';
 
 dotenv.config()
 
-// Use import.meta.url to get the URL of the current module file
 const __filename = fileURLToPath(import.meta.url);
-// Use dirname to get the directory name
 const __dirname = dirname(__filename);
 
 var gateway = new braintree.BraintreeGateway({
@@ -31,7 +29,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Set up Multer storage for product image uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../uploads'));
@@ -60,15 +57,12 @@ export const createProductController = async (req, res) => {
             }
 
             try {
-                // Handle product image upload to Cloudinary
                 if (req.file) {
                     const result = await cloudinary.uploader.upload(req.file.path, { folder: 'products' });
 
-                    // Transform the Cloudinary URL by appending transformation parameters
                     const cloudinaryBaseUrl = 'https://res.cloudinary.com/dewblf95z/image/upload/';
                     const transformedImageUrl = `${cloudinaryBaseUrl}w_640,h_640,c_fill/${result.public_id}.${result.format}`;
 
-                    // Create a new product with the Cloudinary image URL
                     const newProduct = new Product({
                         name,
                         slug: slugify(name, {
@@ -112,7 +106,6 @@ export const createProductController = async (req, res) => {
     }
 };
 
-//get all products
 export const getProductController = async (req, res) => {
     try {
         const products = await productModel.find({}).populate('category').sort({ createdAt: -1 })
@@ -132,7 +125,6 @@ export const getProductController = async (req, res) => {
     }
 }
 
-//get single product
 export const getSingleProductController = async (req, res) => {
     try {
         const product = await productModel.findOne({ slug: req.params.slug }).populate('category');
@@ -151,7 +143,6 @@ export const getSingleProductController = async (req, res) => {
     }
 }
 
-//delete a product
 export const deleteProductController = async (req, res) => {
     try {
         await productModel.findByIdAndDelete(req.params.id)
@@ -169,7 +160,6 @@ export const deleteProductController = async (req, res) => {
     }
 }
 
-//update product
 export const updateProductController = async (req, res) => {
     try {
         upload(req, res, async (err) => {
@@ -185,15 +175,12 @@ export const updateProductController = async (req, res) => {
             }
 
             try {
-                // Handle product image upload to Cloudinary (if a new image is provided)
                 if (req.file) {
                     const result = await cloudinary.uploader.upload(req.file.path, { folder: 'products' });
 
-                    // Transform the Cloudinary URL by appending transformation parameters
                     const cloudinaryBaseUrl = 'https://res.cloudinary.com/dewblf95z/image/upload/';
                     const transformedImageUrl = `${cloudinaryBaseUrl}w_400,h_400,c_fill/${result.public_id}.${result.format}`;
 
-                    // Update the product with the new Cloudinary image URL
                     const updatedProduct = await Product.findByIdAndUpdate(
                         req.params.id,
                         {
@@ -209,7 +196,7 @@ export const updateProductController = async (req, res) => {
                             shipping,
                             photo: transformedImageUrl,
                         },
-                        { new: true } // Return the updated product
+                        { new: true } 
                     );
 
                     if (!updatedProduct) {
@@ -222,7 +209,6 @@ export const updateProductController = async (req, res) => {
                         product: updatedProduct,
                     });
                 } else {
-                    // No new image provided, update the product without changing the photo
                     const updatedProduct = await Product.findByIdAndUpdate(
                         req.params.id,
                         {
@@ -326,7 +312,7 @@ export const productCountController = async (req, res) => {
 
 export const productListController = async (req, res) => {
     try {
-        const perPage = 9
+        const perPage = 20
         const page = req.params.page ? req.params.page : 1
         const products = await productModel
             .find({})
@@ -422,7 +408,7 @@ export const braintreeTokenController = async (req, res) => {
 
 export const braintreePaymentController = async (req, res) => {
     try {
-        const { cart, nonce } = req.body; // Assuming cart is an array
+        const { cart, nonce } = req.body; 
         if (!Array.isArray(cart)) {
             return res.status(400).json({ error: "Cart should be an array" });
         }

@@ -6,7 +6,7 @@ import JWT from "jsonwebtoken";
 export const registerController = async (req, res) => {
     try {
         const { name, email, password, phone, address, answer } = req.body;
-        //validation
+
         if (!name) {
             return res.send({ message: 'Name is Required' })
         }
@@ -26,19 +26,18 @@ export const registerController = async (req, res) => {
             return res.send({ message: 'Answer is Required' })
         }
 
-        //check user
+
         const existingUser = await userModel.findOne({ email })
-        //existing user
+
         if (existingUser) {
             return res.status(200).send({
                 success: false,
                 message: 'Already Register please login'
             })
         }
-
-        //register user
+ 
         const hashedPassword = await hashPassword(password)
-        //save
+
         const user = await new userModel({ name, email, phone, address, password: hashedPassword, answer }).save()
         res.status(201).send({
             success: true,
@@ -56,18 +55,17 @@ export const registerController = async (req, res) => {
     }
 };
 
-//POST LOGIN
 export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body
-        //validation
+
         if (!email || !password) {
             return res.status(404).send({
                 success: false,
                 message: 'Invalid email or password'
             })
         }
-        //check user
+
         const user = await userModel.findOne({ email })
         if (!user) {
             return res.status(404).send({
@@ -107,7 +105,6 @@ export const loginController = async (req, res) => {
     }
 };
 
-//forgot password
 export const forgotPasswordController = async (req, res) => {
     try {
         const { email, answer, newPassword } = req.body
@@ -120,9 +117,9 @@ export const forgotPasswordController = async (req, res) => {
         if (!newPassword) {
             res.status(400).send({ message: 'New Password is required' })
         }
-        //check
+
         const user = await userModel.findOne({ email, answer })
-        //validation
+
         if (!user) {
             return res.status(404).send({
                 success: false,

@@ -1,7 +1,6 @@
 import JWT from 'jsonwebtoken'
 import userModel from '../models/userModel.js';
 
-//Protected Routes
 export const requireSignIn = async (req, res, next) => {
     try {
         const decode = JWT.verify(
@@ -15,7 +14,6 @@ export const requireSignIn = async (req, res, next) => {
     }
 }
 
-//admin access
 export const isAdmin = async (req, res, next) => {
     try {
         const user = await userModel.findById(req.user._id)
