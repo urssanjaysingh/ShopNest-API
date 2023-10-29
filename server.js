@@ -24,7 +24,9 @@ app.use('/api/v1/category', categoryRoutes)
 app.use('/api/v1/product', productRoutes)
 
 app.get('/', (req, res) => {
-    res.send('<h1 style="color: #007bff; font-family: Arial, sans-serif; text-align: center;">Welcome to E-Commerce App</h1>');
+    res.send('<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f8f9fa;">' +
+        '<h1 style="color: #007bff; font-family: Arial, sans-serif; text-align: center; background-color: #ffffff; padding: 20px; border-radius: 8px;">Welcome to E-Commerce App</h1>' +
+        '</div>');
 });
 
 const PORT = process.env.PORT || 3500;
