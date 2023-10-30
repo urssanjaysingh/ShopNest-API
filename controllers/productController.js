@@ -196,7 +196,7 @@ export const updateProductController = async (req, res) => {
                             shipping,
                             photo: transformedImageUrl,
                         },
-                        { new: true } 
+                        { new: true }
                     );
 
                     if (!updatedProduct) {
@@ -318,7 +318,6 @@ export const productListController = async (req, res) => {
             .find({})
             .skip((page - 1) * perPage)
             .limit(perPage)
-            .sort({ createdAt: -1 })
         res.status(200).send({
             success: true,
             products,
@@ -408,7 +407,7 @@ export const braintreeTokenController = async (req, res) => {
 
 export const braintreePaymentController = async (req, res) => {
     try {
-        const { cart, nonce } = req.body; 
+        const { cart, nonce } = req.body;
         if (!Array.isArray(cart)) {
             return res.status(400).json({ error: "Cart should be an array" });
         }
