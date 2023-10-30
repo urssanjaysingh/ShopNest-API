@@ -41,7 +41,7 @@ ShopNest API is equipped with the following features:
 5. **Shopping Cart:**
     - Users can add products to their shopping cart.
     - The app displays a summary of items in the user's shopping cart.
-    - Users can adjust item quantities or remove items from the cart.
+    - Users can remove items from the cart.
 
 6. **Checkout Process:**
     - Users provide shipping information during checkout.
@@ -53,10 +53,6 @@ ShopNest API is equipped with the following features:
     - Admins can process and fulfill customer orders, manage order statuses, generate shipping labels, and handle inventory levels.
 
 8. **Planned Features:**
-    - Save items to a wishlist for future reference or easy purchase.
-    - Leave product reviews and ratings.
-    - Admins view and respond to customer inquiries and requests for support.
-    - Admins access sales reports and analytics for monitoring platform performance.
     - Desktop mode is prioritized but should be available in mobile.
 
 ## Technologies
